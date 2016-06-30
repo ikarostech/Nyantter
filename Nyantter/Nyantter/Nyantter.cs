@@ -810,8 +810,8 @@ namespace Nyantter
     { }
     public class OAuth
     {
-        private static string ConsumerKey { get { return "rbnqym6bymX52AnG1TJcI0iWD"; } }
-        private static string ConsumerSecret { get { return "LBC7S58eRyJ7DcNtmJMjyBoPs0aMhiXIg2obxmnpmOjI7mfMPs"; } }
+        private static string ConsumerKey { get { return ""; } }
+        private static string ConsumerSecret { get { return ""; } }
 
         private string RequestKey { get; set; }
         private string RequestSecret { get; set; }

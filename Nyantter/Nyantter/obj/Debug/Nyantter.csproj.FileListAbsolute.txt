@@ -1,0 +1,17 @@
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\bin\Debug\Nyantter.dll
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\bin\Debug\Nyantter.pdb
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\bin\Debug\Nyantter.pri
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\Nyantter.csprojResolveAssemblyReference.cache
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\Nyantter.dll
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\Nyantter.pdb
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\priconfig.xml
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\priconfig.xml.intermediate
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\layout.resfiles
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\layout.resfiles.intermediate
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\resources.resfiles
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\resources.resfiles.intermediate
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\pri.resfiles
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\pri.resfiles.intermediate
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\qualifiers.txt
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\qualifiers.txt.intermediate
+C:\Users\遼\Documents\GitHub\Nyantter\Nyantter\Nyantter\obj\Debug\MultipleQualifiersPerDimensionFound.txt
