@@ -19,7 +19,6 @@ namespace Nyantter
 {
     public static class Statuses
     {
-        //一般的なツイートの用法
         public async static Task<Tweet> update(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/statuses/update.json";
@@ -28,6 +27,27 @@ namespace Nyantter
             var result = new Tweet();
             return result;
         }
+        /// <summary>
+        /// ツイートを投稿します
+        /// </summary>
+        /// <param name="oauth"></pログインアカウントaram>
+        /// <param name="status">ツイートするテキスト</param>
+        /// <returns></returns>
+        public async static Task<Tweet> update(OAuth oauth, string status)
+        {
+            string APIURL = "https://api.twitter.com/1.1/statuses/update.json";
+            var postdata = new SortedDictionary<string, string>
+            {
+                { "status",status },
+            };
+            
+            
+            string resultstr = await oauth.RestPOST(oauth, APIURL, postdata);
+            //Tweet result = Serialize.JsontoOwnTweet(resultstr, user);
+            var result = new Tweet();
+            return result;
+        }
+
 
         public async static Task<Tweet> retweet(OAuth oauth, SortedDictionary<string, string> postdata)
         {
@@ -36,6 +56,21 @@ namespace Nyantter
             Tweet result = Serialize.JsontoTweet(resultstr);
             return result;
         }
+        /// <summary>
+        /// リツイートします
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ツイートID</param>
+        /// <returns></returns>
+        public async static Task<Tweet> retweet(OAuth oauth,decimal id)
+        {
+            string APIURL = String.Format("https://api.twitter.com/1.1/statuses/retweet/" + String.Format("{0}",id) + ".json");
+
+            string resultstr = await oauth.RestPOST(oauth, APIURL, id);
+            Tweet result = Serialize.JsontoTweet(resultstr);
+            return result;
+        }
+
         public async static Task<List<Tweet>> retweets_of_me(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = String.Format("https://api.twitter.com/1.1/statuses/retweet/" + postdata["id"] + ".json");
@@ -50,9 +85,22 @@ namespace Nyantter
             Tweet result = Serialize.JsontoTweet(resultstr);
             return result;
         }
+        /// <summary>
+        /// リツイートを取り消します
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ツイートID</param>
+        /// <returns></returns>
+        public async static Task<Tweet> unretweet(OAuth oauth, decimal id)
+        {
+            string APIURL = String.Format("https://api.twitter.com/1.1/statuses/retweet/" + String.Format("{0}", id) + ".json");
 
+            string resultstr = await oauth.RestPOST(oauth, APIURL, id);
+            Tweet result = Serialize.JsontoTweet(resultstr);
+            return result;
 
-        //ツイートの詳細を閲覧します
+        }
+
         public async static Task<Tweet> show(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/statuses/show.json";
@@ -60,8 +108,21 @@ namespace Nyantter
             Tweet result = Serialize.JsontoTweet(resultstr);
             return result;
         }
+        /// <summary>
+        /// ツイートの詳細情報を読み取ります
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ツイートID</param>
+        /// <returns></returns>
+        public async static Task<Tweet> show(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/statuses/show.json";
+            string resultstr = await oauth.RestGET(oauth, APIURL, id);
+            Tweet result = Serialize.JsontoTweet(resultstr);
+            return result;
+        }
 
-        //ツイートを消去します
+
         public async static Task<Tweet> destroy(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/statuses/destroy/" + postdata["id"] + ".json";
@@ -69,8 +130,20 @@ namespace Nyantter
             Tweet result = Serialize.JsontoTweet(resultstr);
             return result;
         }
+        /// <summary>
+        /// ツイートを削除します
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ツイートID</param>
+        /// <returns></returns>
+        public async static Task<Tweet> destroy(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/statuses/destroy/" + String.Format("{0}",id) + ".json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL,id);
+            Tweet result = Serialize.JsontoTweet(resultstr);
+            return result;
+        }
 
-        //レストホームタイムラインの取得
         public async static Task<List<Tweet>> home_timeline(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/statuses/home_timeline.json";
@@ -78,6 +151,20 @@ namespace Nyantter
             List<Tweet> result = Serialize.JsontoTweets(resultstr, oauth);
             return result;
         }
+        /// <summary>
+        /// タイムラインを20件読み込みます
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <returns></returns>
+        public async static Task<List<Tweet>> home_timeline(OAuth oauth)
+        {
+            string APIURL = "https://api.twitter.com/1.1/statuses/home_timeline.json";
+            var postdata = new SortedDictionary<string, string>();
+            string resultstr = await oauth.RestGET(oauth, APIURL, postdata);
+            List<Tweet> result = Serialize.JsontoTweets(resultstr, oauth);
+            return result;
+        }
+
         public async static Task<List<Tweet>> mentions_timeline(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/statuses/mentions_timeline.json";
@@ -85,10 +172,52 @@ namespace Nyantter
             List<Tweet> result = Serialize.JsontoTweets(resultstr, oauth);
             return result;
         }
+        /// <summary>
+        /// 通知タイムラインを20件読み込みます
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <returns></returns>
+        public async static Task<List<Tweet>> mentions_timeline(OAuth oauth)
+        {
+            string APIURL = "https://api.twitter.com/1.1/statuses/mentions_timeline.json";
+            var postdata = new SortedDictionary<string, string>();
+            string resultstr = await oauth.RestGET(oauth, APIURL, postdata);
+            List<Tweet> result = Serialize.JsontoTweets(resultstr, oauth);
+            return result;
+        }
+
         public async static Task<List<Tweet>> user_timeline(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
             string resultstr = await oauth.RestGET(oauth, APIURL, postdata);
+            List<Tweet> result = Serialize.JsontoTweets(resultstr, oauth);
+            return result;
+        }
+        /// <summary>
+        /// 自分の直近のツイートを20件読み込みます
+        /// </summary>
+        /// <param name="oauth"></param>
+        /// <param name="postdata"></param>
+        /// <returns></returns>
+        public async static Task<List<Tweet>> user_timeline(OAuth oauth)
+        {
+            string APIURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
+            var postdata = new SortedDictionary<string, string>();
+            string resultstr = await oauth.RestGET(oauth, APIURL, postdata);
+            List<Tweet> result = Serialize.JsontoTweets(resultstr, oauth);
+            return result;
+        }
+        /// <summary>
+        /// 指定されたIDのアカウントの直近のツイートを20件読み込みます
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">アカウントID(showなどでよみとる)</param>
+        /// <returns></returns>
+        public async static Task<List<Tweet>> user_timeline(OAuth oauth,decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
+            
+            string resultstr = await oauth.RestGET(oauth, APIURL, id);
             List<Tweet> result = Serialize.JsontoTweets(resultstr, oauth);
             return result;
         }
@@ -192,6 +321,20 @@ namespace Nyantter
             User result = Serialize.JsontoUser(resultstr, true);
             return result;
         }
+        /// <summary>
+        /// フォローします
+        /// </summary>
+        /// <param name="oauth">ログインID</param>
+        /// <param name="id">ユーザーID</param>
+        /// <returns></returns>
+        public async static Task<User> create(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/friendships/create.json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL,id);
+            User result = Serialize.JsontoUser(resultstr, true);
+            return result;
+        }
+
         public async static Task<User> destroy(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/friendships/destroy.json";
@@ -199,6 +342,20 @@ namespace Nyantter
             User result = Serialize.JsontoUser(resultstr, true);
             return result;
         }
+        /// <summary>
+        /// リムーブします
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ユーザーID</param>
+        /// <returns></returns>
+        public async static Task<User> destroy(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/friendships/destroy.json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL, id);
+            User result = Serialize.JsontoUser(resultstr, true);
+            return result;
+        }
+
         public async static Task<string> update(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/friendships/update.json";
@@ -228,6 +385,20 @@ namespace Nyantter
             User result = Serialize.JsontoUser(resultstr, true);
             return result;
         }
+        /// <summary>
+        /// ユーザーの詳細情報を見ます
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ユーザーID</param>
+        /// <returns></returns>
+        public async static Task<User> show(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/users/show.json";
+
+            string resultstr = await oauth.RestGET(oauth, APIURL, id);
+            User result = Serialize.JsontoUser(resultstr, true);
+            return result;
+        }
 
         public async static Task<User> search(OAuth oauth, SortedDictionary<string, string> postdata)
         {
@@ -237,12 +408,27 @@ namespace Nyantter
             return result;
         }
 
+
         public async static Task<User> report_spam(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/users/report_spam.json";
             string resultstr = await oauth.RestPOST(oauth, APIURL, postdata);
             User result = Serialize.JsontoUser(resultstr, true);
             return result;
+        }
+        /// <summary>
+        /// スパム報告をします
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ユーザーID</param>
+        /// <returns></returns>
+        public async static Task<User> report_spam(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/users/report_spam.json";
+            string resultstr = await oauth.RestGET(oauth, APIURL,id);
+            User result = Serialize.JsontoUser(resultstr, true);
+            return result;
+
         }
 
         public async static Task<string> profile_banner(OAuth oauth, SortedDictionary<string, string> postdata)
@@ -268,8 +454,6 @@ namespace Nyantter
         }
 
     }
-    public static class SuggestedUsers
-    { }
     public static class Favorites
     {
         //ふぁぼります
@@ -280,12 +464,38 @@ namespace Nyantter
             Tweet result = Serialize.JsontoTweet(resultstr);
             return result;
         }
+        /// <summary>
+        /// いいねします
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ツイートID</param>
+        /// <returns></returns>
+        public static async Task<Tweet> create(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/favorites/create.json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL, id);
+            Tweet result = Serialize.JsontoTweet(resultstr);
+            return result;
+        }
 
         //あんふぁぼります
         public static async Task<Tweet> destroy(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/favorites/destroy.json";
             string resultstr = await oauth.RestPOST(oauth, APIURL, postdata);
+            Tweet result = Serialize.JsontoTweet(resultstr);
+            return result;
+        }
+        /// <summary>
+        /// いいねを取り消します
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ツイートID</param>
+        /// <returns></returns>
+        public static async Task<Tweet> destroy(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/favorites/destroy.json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL, id);
             Tweet result = Serialize.JsontoTweet(resultstr);
             return result;
         }
@@ -308,6 +518,20 @@ namespace Nyantter
             User result = Serialize.JsontoUser(resultstr, true);
             return result;
         }
+        /// <summary>
+        /// ミュートします
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ユーザーID</param>
+        /// <returns></returns>
+        public async static Task<User> create(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/mutes/users/create.json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL,id);
+            User result = Serialize.JsontoUser(resultstr, true);
+            return result;
+        }
+
         public async static Task<User> destroy(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/mutes/users/destroy.json";
@@ -315,6 +539,20 @@ namespace Nyantter
             User result = Serialize.JsontoUser(resultstr, true);
             return result;
         }
+        /// <summary>
+        /// ミュートを解除します
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ユーザーID</param>
+        /// <returns></returns>
+        public async static Task<User> destroy(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/mutes/users/destroy.json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL, id);
+            User result = Serialize.JsontoUser(resultstr, true);
+            return result;
+        }
+
         public async static Task<string> ids(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/mutes/users/ids.json";
@@ -353,10 +591,37 @@ namespace Nyantter
             User result = Serialize.JsontoUser(resultstr, true);
             return result;
         }
+        /// <summary>
+        /// ブロックします
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async static Task<User> create(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/blocks/create.json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL, id);
+            User result = Serialize.JsontoUser(resultstr, true);
+            return result;
+        }
+
         public async static Task<User> destroy(OAuth oauth, SortedDictionary<string, string> postdata)
         {
             string APIURL = "https://api.twitter.com/1.1/blocks/destroy.json";
             string resultstr = await oauth.RestPOST(oauth, APIURL, postdata);
+            User result = Serialize.JsontoUser(resultstr, true);
+            return result;
+        }
+        /// <summary>
+        /// ブロックを解除します
+        /// </summary>
+        /// <param name="oauth">ログインアカウント</param>
+        /// <param name="id">ユーザーID</param>
+        /// <returns></returns>
+        public async static Task<User> destroy(OAuth oauth, decimal id)
+        {
+            string APIURL = "https://api.twitter.com/1.1/blocks/destroy.json";
+            string resultstr = await oauth.RestPOST(oauth, APIURL, id);
             User result = Serialize.JsontoUser(resultstr, true);
             return result;
         }
@@ -813,8 +1078,9 @@ namespace Nyantter
         private static string ConsumerKey { get { return ""; } }
         private static string ConsumerSecret { get { return ""; } }
 
-        private string RequestKey { get; set; }
-        private string RequestSecret { get; set; }
+        public string RequestKey { get; set; }
+        public string RequestSecret { get; set; }
+        
 
         private string AccessKey { get; set; }
         private string AccessSecret { get; set; }
@@ -828,7 +1094,7 @@ namespace Nyantter
         public string PostUrl { get; set; }
         public string[] PostString { get; set; }
 
-        public async Task<string[]> GetRequesttoken()
+        public async Task GetRequesttoken()
         {
             string APIURL = "https://api.twitter.com/oauth/request_token";
 
@@ -873,8 +1139,7 @@ namespace Nyantter
             var test = request.Headers.AcceptEncoding.ToString();
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                string[] alternative = await GetRequesttoken();
-                return alternative;
+               await GetRequesttoken();
             }
             byte[] data = await response.Content.ReadAsByteArrayAsync();
 
@@ -882,16 +1147,9 @@ namespace Nyantter
             //16/4/22UWP移行に伴いGzipの解凍を行います
             result = defreezegzip(data);
 
-
             RequestKey = Regex.Match(result, @"oauth_token=(.*?)&oauth_token_secret=.*?&oauth_callback.*").Groups[1].Value;
             RequestSecret = Regex.Match(result, @"oauth_token=(.*?)&oauth_token_secret=(.*?)&oauth_callback.*").Groups[2].Value;
 
-            var returnresult = new string[3];
-            returnresult[0] = PostUrl;
-            returnresult[1] = RequestKey;
-            returnresult[2] = RequestSecret;
-            PostString = returnresult;
-            return returnresult;
         }
         public async Task GetAccessKey(string PIN)
         {
@@ -1004,6 +1262,14 @@ namespace Nyantter
 
             return defreezegzip(data);
         }
+        public async Task<string> RestGET(OAuth oauth, string APIURL, decimal id)
+        {
+            var postdata = new SortedDictionary<string, string>
+            {
+                {"id",String.Format("{0}",id) }
+            };
+            return await RestGET(oauth, APIURL, postdata);
+        }
         public async Task<string> RestPOST(OAuth oauth, string APIURL, SortedDictionary<string, string> postdata)
         {
             var postquery = new Dictionary<string, string>(postdata);
@@ -1042,6 +1308,14 @@ namespace Nyantter
 
             return defreezegzip(data);
 
+        }
+        public async Task<string> RestPOST(OAuth oauth, string APIURL, decimal id)
+        {
+            var postdata = new SortedDictionary<string, string>
+            {
+                {"id",String.Format("{0}",id) }
+            };
+            return await RestPOST(oauth,APIURL,postdata);
         }
 
         //16/4/22に追加gzipの解凍関数
